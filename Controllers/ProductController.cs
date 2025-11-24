@@ -60,6 +60,48 @@ namespace ShopyAPP.Controllers
             return Ok(new { success = true, message = "Producto actualizado exitosamente!", result = product });
         }
 
+
+        //Actualizar Producto
+        [HttpPut]
+        [Route("actualizarProducto/{id}")]
+        public IActionResult ActualizarProducto(int id, [FromBody] ProductModel productUpdated)
+        {
+            if (productUpdated == null)
+            {
+                return BadRequest("Los datos del producto no pueden ser nulos.");
+            }
+
+
+            var existingProduct = _context.Product.Find(id);
+
+            if (existingProduct == null)
+            {
+
+                return NotFound("producto no encontrado.");
+            }
+
+
+            existingProduct.name = productUpdated.name;
+            existingProduct.price = productUpdated.price;
+            existingProduct.stock = productUpdated.stock;
+        
+
+
+            try
+            {
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al actualizar el producto: {ex.Message}");
+            }
+
+
+
+            return Ok(new { success = true, message = "Producto actualizado exitosamente!", result = existingProduct });
+        }
+
     }
 
 }
