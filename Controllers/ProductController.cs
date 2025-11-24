@@ -102,6 +102,38 @@ namespace ShopyAPP.Controllers
             return Ok(new { success = true, message = "Producto actualizado exitosamente!", result = existingProduct });
         }
 
+
+        //Eliminar Producto
+        [HttpDelete("eliminarProducto/{id}")]
+        public IActionResult EliminarProducto(int id)
+        {
+
+            var product = _context.Product.FirstOrDefault(u => u.id == id);
+
+            if (product == null)
+            {
+
+                return NotFound(new { success = false, message = "producto no encontrado." });
+            }
+
+
+            try
+            {
+                _context.Product.Remove(product);
+
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar el producto: {ex.Message}");
+            }
+
+            return Ok(new { success = true, message = "Producto eliminado exitosamente!", result = product });
+        }
+
     }
+
+
 
 }
